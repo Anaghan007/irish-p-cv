@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Anaghan Smit - PCV</title>
+    <title>Anaghan Smit - CV</title>
     
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Briefcase.png">
     <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Briefcase.png">
@@ -20,7 +20,8 @@
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Poppins:wght@900&display=swap" rel="stylesheet">
 
     <style>
         /* Base Styles */
@@ -34,7 +35,8 @@
         .card-dark {
             background-color: #18181b; /* Zinc-900 */
             border: 1px solid #27272a; /* Zinc-800 */
-            border-radius: 16px;
+            /* UPDATED: Much rounder border radius */
+            border-radius: 40px; 
         }
 
         /* === ULTIMATE PRINT FIX === */
@@ -115,7 +117,8 @@
             ];
 
             const SectionTitle = ({ icon, text, colorClass = "text-zinc-300" }) => (
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg mb-4">
+                // UPDATED: rounded-full
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-full mb-4">
                     {icon}
                     <span className={`text-xs font-bold uppercase tracking-wider ${colorClass}`}>{text}</span>
                 </div>
@@ -153,11 +156,12 @@
                                         I'm a high-energy Master's student who optimizes every task. Whether it's managing stock at DMart or delivering pizzas on time, I bring reliability and hustle. Looking for a team where I can work hard and grow.
                                     </p>
                                     <div className="grid grid-cols-2 gap-2">
-                                        <div className="bg-zinc-800/50 p-2 rounded text-center border border-zinc-700/50">
+                                        {/* UPDATED: rounded-[20px] */}
+                                        <div className="bg-zinc-800/50 p-2 rounded-[20px] text-center border border-zinc-700/50">
                                             <div className="text-white font-bold text-lg">100%</div>
                                             <div className="text-[10px] text-zinc-500 uppercase">Reliable</div>
                                         </div>
-                                        <div className="bg-zinc-800/50 p-2 rounded text-center border border-zinc-700/50">
+                                        <div className="bg-zinc-800/50 p-2 rounded-[20px] text-center border border-zinc-700/50">
                                             <div className="text-white font-bold text-lg">24/7</div>
                                             <div className="text-[10px] text-zinc-500 uppercase">Ready</div>
                                         </div>
@@ -176,7 +180,8 @@
                                         />
                                         <div className="flex flex-wrap gap-2">
                                             {powerSkills.map(skill => (
-                                                <div key={skill} className="px-3 py-2 bg-zinc-800/50 border border-zinc-700 rounded text-xs text-zinc-300 font-medium">
+                                                // UPDATED: rounded-full
+                                                <div key={skill} className="px-3 py-2 bg-zinc-800/50 border border-zinc-700 rounded-full text-xs text-zinc-300 font-medium">
                                                     {skill}
                                                 </div>
                                             ))}
@@ -194,13 +199,14 @@
                                             colorClass="text-green-400"
                                         />
                                         <div className="flex flex-col gap-2">
-                                            <span className="w-full px-3 py-2 bg-green-500/10 text-green-400 text-xs rounded font-bold border border-green-500/20 text-center">
+                                            {/* UPDATED: rounded-full */}
+                                            <span className="w-full px-3 py-2 bg-green-500/10 text-green-400 text-xs rounded-full font-bold border border-green-500/20 text-center">
                                                 Weekdays
                                             </span>
-                                            <span className="w-full px-3 py-2 bg-green-500/10 text-green-400 text-xs rounded font-bold border border-green-500/20 text-center">
+                                            <span className="w-full px-3 py-2 bg-green-500/10 text-green-400 text-xs rounded-full font-bold border border-green-500/20 text-center">
                                                 Weekends
                                             </span>
-                                            <span className="w-full px-3 py-2 bg-green-500/10 text-green-400 text-xs rounded font-bold border border-green-500/20 text-center">
+                                            <span className="w-full px-3 py-2 bg-green-500/10 text-green-400 text-xs rounded-full font-bold border border-green-500/20 text-center">
                                                 Evenings
                                             </span>
                                         </div>
@@ -226,22 +232,35 @@
                                     </div>
 
                                     <div className="flex flex-col justify-center text-center md:text-left z-10">
-                                        <h1 className="text-4xl font-extrabold text-white mb-4 tracking-tight">Anaghan Smit</h1>
                                         
+                                        {/* === NAME FONT: POPPINS BLACK (900) === */}
+                                        <h1 className="text-4xl text-white mb-4 tracking-tight" style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 900 }}>Anaghan Smit</h1>
+                                        
+                                        {/* VISA (Green Text + Green Icon) */}
                                         <div className="flex flex-wrap justify-center md:justify-start gap-3">
-                                            <span className="px-3 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-lg text-xs font-bold flex items-center gap-2">
+                                            {/* UPDATED: rounded-full */}
+                                            <span className="px-3 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full text-xs font-bold flex items-center gap-2">
                                                 <i className="fas fa-passport"></i> Stamp 2 Visa (20hrs / 40hrs)
                                             </span>
-                                            <span className="px-3 py-1.5 bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-lg text-xs font-semibold flex items-center gap-2">
-                                                <i className="fas fa-map-marker-alt"></i> Dublin, Ireland
+                                            
+                                            {/* LOCATION (Orange Icon + Grey Text) */}
+                                            {/* UPDATED: rounded-full */}
+                                            <span className="px-3 py-1.5 bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-full text-xs font-semibold flex items-center gap-2">
+                                                <i className="fas fa-map-marker-alt text-orange-500"></i> Dublin, Ireland
                                             </span>
                                         </div>
+
+                                        {/* CONTACTS (Orange Icon + Grey Text) */}
                                         <div className="flex flex-wrap justify-center md:justify-start gap-3 mt-3">
-                                            <span className="px-3 py-1.5 bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-lg text-xs font-semibold flex items-center gap-2">
-                                                <i className="fas fa-envelope"></i> anaghan161@gmail.com
+                                            
+                                            {/* UPDATED: rounded-full */}
+                                            <span className="px-3 py-1.5 bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-full text-xs font-semibold flex items-center gap-2">
+                                                <i className="fas fa-envelope text-orange-500"></i> anaghan161@gmail.com
                                             </span>
-                                            <span className="px-3 py-1.5 bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-lg text-xs font-semibold flex items-center gap-2">
-                                                <i className="fas fa-phone"></i> +353 89 123 4567
+                                            
+                                            {/* UPDATED: rounded-full */}
+                                            <span className="px-3 py-1.5 bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-full text-xs font-semibold flex items-center gap-2">
+                                                <i className="fas fa-phone text-orange-500"></i> +353 89 123 4567
                                             </span>
                                         </div>
                                     </div>
@@ -267,11 +286,12 @@
                                             <span className="inline-block px-2 py-0.5 bg-yellow-500/20 text-yellow-300 rounded text-[10px] font-bold mb-2">Previous</span>
                                             <div className="text-zinc-400 text-xs font-bold uppercase mb-2">DMart Retail • India</div>
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
-                                                <div className="bg-zinc-800/40 p-3 rounded-lg border border-zinc-700/50">
+                                                {/* UPDATED: rounded-[30px] */}
+                                                <div className="bg-zinc-800/40 p-3 rounded-[30px] border border-zinc-700/50">
                                                     <strong className="text-white text-xs block mb-1">📋 Inventory Logistics</strong>
                                                     <p className="text-zinc-400 text-xs">Managed stock reports & refilled empty shelves instantly.</p>
                                                 </div>
-                                                <div className="bg-zinc-800/40 p-3 rounded-lg border border-zinc-700/50">
+                                                <div className="bg-zinc-800/40 p-3 rounded-[30px] border border-zinc-700/50">
                                                     <strong className="text-white text-xs block mb-1">⚡ Fast Packing</strong>
                                                     <p className="text-zinc-400 text-xs">Helped 100+ customers daily with rapid bagging.</p>
                                                 </div>
@@ -301,7 +321,8 @@
                                     />
 
                                     <div className="grid grid-cols-1 gap-3">
-                                        <div className="bg-zinc-800/30 p-3 rounded-xl border border-zinc-800 flex justify-between items-center">
+                                        {/* UPDATED: rounded-[30px] */}
+                                        <div className="bg-zinc-800/30 p-3 rounded-[30px] border border-zinc-800 flex justify-between items-center">
                                             <div>
                                                 <h4 className="text-white font-bold text-sm">MSc (Current)</h4>
                                                 <p className="text-zinc-500 text-xs">Dublin Business School</p>
@@ -309,7 +330,7 @@
                                             <span className="px-3 py-1 bg-zinc-900 text-indigo-400 rounded border border-zinc-700 text-xs font-mono">2026 - Present</span>
                                         </div>
 
-                                        <div className="bg-zinc-800/30 p-3 rounded-xl border border-zinc-800 flex justify-between items-center">
+                                        <div className="bg-zinc-800/30 p-3 rounded-[30px] border border-zinc-800 flex justify-between items-center">
                                             <div>
                                                 <h4 className="text-white font-bold text-sm">Bachelor's Degree</h4>
                                                 <p className="text-zinc-500 text-xs">VNSGU University</p>
