@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anaghan Smit - CV Final Full Screen</title>
+    <title>Anaghan Smit - CV Final Mobile Order</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -43,7 +43,7 @@
 
             /* Disable the Web Centering Wrapper */
             .web-wrapper {
-                display: block !important; /* Stops flex centering */
+                display: block !important;
                 width: 100% !important;
                 height: 100% !important;
                 background-color: #0f0f10 !important;
@@ -51,9 +51,9 @@
 
             /* Force the content container to fill the page */
             .content-container {
-                max-width: none !important; /* Removes 210mm limit */
+                max-width: none !important;
                 width: 100% !important;
-                padding: 25px !important; /* Safe zone padding */
+                padding: 25px !important;
                 box-sizing: border-box !important;
             }
 
@@ -69,6 +69,10 @@
             }
             .gap-4 { gap: 1rem !important; }
             
+            /* Print Order Enforcement (Ensure Sidebar is Left, Content is Right on Paper) */
+            .print\:order-1 { order: 1 !important; }
+            .print\:order-2 { order: 2 !important; }
+
             /* Text Sizing Adjustment for Print readability */
             .p-6 { padding: 1.25rem !important; }
             .my-print-gap { margin-top: 1.5rem !important; margin-bottom: 1.5rem !important; } 
@@ -103,7 +107,6 @@
             );
 
             return (
-                // Outer wrapper with class "web-wrapper" for print override
                 <div className="web-wrapper min-h-screen w-full flex justify-center bg-[#0f0f10]">
                     
                     {/* PRINT BUTTON */}
@@ -115,13 +118,14 @@
                         <i className="fas fa-print text-xl"></i>
                     </button>
 
-                    {/* Content Container with class "content-container" */}
+                    {/* Content Container */}
                     <div className="content-container w-full max-w-[210mm] min-h-[297mm] p-4 md:p-6 flex flex-col">
                         
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 flex-1">
                             
                             {/* === LEFT SIDEBAR === */}
-                            <div className="flex flex-col gap-4 h-full">
+                            {/* Mobile: Order 2 (Last) | Desktop/Print: Order 1 (First/Left) */}
+                            <div className="flex flex-col gap-4 h-full order-2 md:order-1 print:order-1">
                                 
                                 {/* VIBE CHECK */}
                                 <div className="card-dark p-5 flex-grow-0">
@@ -190,7 +194,8 @@
                             </div>
 
                             {/* === RIGHT CONTENT === */}
-                            <div className="md:col-span-2 flex flex-col gap-4 h-full">
+                            {/* Mobile: Order 1 (First) | Desktop/Print: Order 2 (Second/Right) */}
+                            <div className="md:col-span-2 flex flex-col gap-4 h-full order-1 md:order-2 print:order-2">
 
                                 {/* HEADER */}
                                 <div className="card-dark p-6 flex flex-col md:flex-row items-center gap-6 relative overflow-hidden">
