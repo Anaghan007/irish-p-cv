@@ -35,7 +35,6 @@
         .card-dark {
             background-color: #18181b; /* Zinc-900 */
             border: 1px solid #27272a; /* Zinc-800 */
-            /* UPDATED: Much rounder border radius */
             border-radius: 40px; 
         }
 
@@ -117,7 +116,6 @@
             ];
 
             const SectionTitle = ({ icon, text, colorClass = "text-zinc-300" }) => (
-                // UPDATED: rounded-full
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-full mb-4">
                     {icon}
                     <span className={`text-xs font-bold uppercase tracking-wider ${colorClass}`}>{text}</span>
@@ -156,7 +154,6 @@
                                         I'm a high-energy Master's student who optimizes every task. Whether it's managing stock at DMart or delivering pizzas on time, I bring reliability and hustle. Looking for a team where I can work hard and grow.
                                     </p>
                                     <div className="grid grid-cols-2 gap-2">
-                                        {/* UPDATED: rounded-[20px] */}
                                         <div className="bg-zinc-800/50 p-2 rounded-[20px] text-center border border-zinc-700/50">
                                             <div className="text-white font-bold text-lg">100%</div>
                                             <div className="text-[10px] text-zinc-500 uppercase">Reliable</div>
@@ -180,7 +177,6 @@
                                         />
                                         <div className="flex flex-wrap gap-2">
                                             {powerSkills.map(skill => (
-                                                // UPDATED: rounded-full
                                                 <div key={skill} className="px-3 py-2 bg-zinc-800/50 border border-zinc-700 rounded-full text-xs text-zinc-300 font-medium">
                                                     {skill}
                                                 </div>
@@ -199,7 +195,6 @@
                                             colorClass="text-green-400"
                                         />
                                         <div className="flex flex-col gap-2">
-                                            {/* UPDATED: rounded-full */}
                                             <span className="w-full px-3 py-2 bg-green-500/10 text-green-400 text-xs rounded-full font-bold border border-green-500/20 text-center">
                                                 Weekdays
                                             </span>
@@ -238,13 +233,11 @@
                                         
                                         {/* VISA (Green Text + Green Icon) */}
                                         <div className="flex flex-wrap justify-center md:justify-start gap-3">
-                                            {/* UPDATED: rounded-full */}
                                             <span className="px-3 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full text-xs font-bold flex items-center gap-2">
                                                 <i className="fas fa-passport"></i> Stamp 2 Visa (20hrs / 40hrs)
                                             </span>
                                             
                                             {/* LOCATION (Orange Icon + Grey Text) */}
-                                            {/* UPDATED: rounded-full */}
                                             <span className="px-3 py-1.5 bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-full text-xs font-semibold flex items-center gap-2">
                                                 <i className="fas fa-map-marker-alt text-orange-500"></i> Dublin, Ireland
                                             </span>
@@ -253,12 +246,10 @@
                                         {/* CONTACTS (Orange Icon + Grey Text) */}
                                         <div className="flex flex-wrap justify-center md:justify-start gap-3 mt-3">
                                             
-                                            {/* UPDATED: rounded-full */}
                                             <span className="px-3 py-1.5 bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-full text-xs font-semibold flex items-center gap-2">
                                                 <i className="fas fa-envelope text-orange-500"></i> anaghan161@gmail.com
                                             </span>
                                             
-                                            {/* UPDATED: rounded-full */}
                                             <span className="px-3 py-1.5 bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-full text-xs font-semibold flex items-center gap-2">
                                                 <i className="fas fa-phone text-orange-500"></i> +353 89 123 4567
                                             </span>
@@ -286,7 +277,7 @@
                                             <span className="inline-block px-2 py-0.5 bg-yellow-500/20 text-yellow-300 rounded text-[10px] font-bold mb-2">Previous</span>
                                             <div className="text-zinc-400 text-xs font-bold uppercase mb-2">DMart Retail • India</div>
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
-                                                {/* UPDATED: rounded-[30px] */}
+                                                {/* rounded-[30px] used here to preserve text layout in grid */}
                                                 <div className="bg-zinc-800/40 p-3 rounded-[30px] border border-zinc-700/50">
                                                     <strong className="text-white text-xs block mb-1">📋 Inventory Logistics</strong>
                                                     <p className="text-zinc-400 text-xs">Managed stock reports & refilled empty shelves instantly.</p>
@@ -321,21 +312,21 @@
                                     />
 
                                     <div className="grid grid-cols-1 gap-3">
-                                        {/* UPDATED: rounded-[30px] */}
-                                        <div className="bg-zinc-800/30 p-3 rounded-[30px] border border-zinc-800 flex justify-between items-center">
-                                            <div>
+                                        {/* UPDATED: rounded-full for Education Boxes */}
+                                        <div className="bg-zinc-800/30 p-3 rounded-full border border-zinc-800 flex justify-between items-center">
+                                            <div className="pl-2">
                                                 <h4 className="text-white font-bold text-sm">MSc (Current)</h4>
                                                 <p className="text-zinc-500 text-xs">Dublin Business School</p>
                                             </div>
-                                            <span className="px-3 py-1 bg-zinc-900 text-indigo-400 rounded border border-zinc-700 text-xs font-mono">2026 - Present</span>
+                                            <span className="px-3 py-1 bg-zinc-900 text-indigo-400 rounded-full border border-zinc-700 text-xs font-mono">2026 - Present</span>
                                         </div>
 
-                                        <div className="bg-zinc-800/30 p-3 rounded-[30px] border border-zinc-800 flex justify-between items-center">
-                                            <div>
+                                        <div className="bg-zinc-800/30 p-3 rounded-full border border-zinc-800 flex justify-between items-center">
+                                            <div className="pl-2">
                                                 <h4 className="text-white font-bold text-sm">Bachelor's Degree</h4>
                                                 <p className="text-zinc-500 text-xs">VNSGU University</p>
                                             </div>
-                                            <span className="px-3 py-1 bg-zinc-900 text-zinc-400 rounded border border-zinc-700 text-xs font-mono">Completed</span>
+                                            <span className="px-3 py-1 bg-zinc-900 text-zinc-400 rounded-full border border-zinc-700 text-xs font-mono">Completed</span>
                                         </div>
                                     </div>
                                 </div>
