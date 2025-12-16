@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anaghan Smit - CV Final Mobile Order</title>
+    <title>Anaghan Smit - CV Sidebar Right PDF</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -69,9 +69,9 @@
             }
             .gap-4 { gap: 1rem !important; }
             
-            /* Print Order Enforcement (Ensure Sidebar is Left, Content is Right on Paper) */
-            .print\:order-1 { order: 1 !important; }
-            .print\:order-2 { order: 2 !important; }
+            /* Print Order Enforcement */
+            .print\:order-1 { order: 1 !important; } /* Main Content (Left) */
+            .print\:order-2 { order: 2 !important; } /* Sidebar (Right) */
 
             /* Text Sizing Adjustment for Print readability */
             .p-6 { padding: 1.25rem !important; }
@@ -123,9 +123,9 @@
                         
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 flex-1">
                             
-                            {/* === LEFT SIDEBAR === */}
-                            {/* Mobile: Order 2 (Last) | Desktop/Print: Order 1 (First/Left) */}
-                            <div className="flex flex-col gap-4 h-full order-2 md:order-1 print:order-1">
+                            {/* === SIDEBAR (Vibe/Skills) === */}
+                            {/* Mobile: Order 2 (Last) | Desktop: Order 2 (Right) | Print: Order 2 (Right) */}
+                            <div className="flex flex-col gap-4 h-full order-2 print:order-2">
                                 
                                 {/* VIBE CHECK */}
                                 <div className="card-dark p-5 flex-grow-0">
@@ -193,9 +193,9 @@
                                 </div>
                             </div>
 
-                            {/* === RIGHT CONTENT === */}
-                            {/* Mobile: Order 1 (First) | Desktop/Print: Order 2 (Second/Right) */}
-                            <div className="md:col-span-2 flex flex-col gap-4 h-full order-1 md:order-2 print:order-2">
+                            {/* === MAIN CONTENT (Header/Experience) === */}
+                            {/* Mobile: Order 1 (First) | Desktop: Order 1 (Left) | Print: Order 1 (Left) */}
+                            <div className="md:col-span-2 flex flex-col gap-4 h-full order-1 print:order-1">
 
                                 {/* HEADER */}
                                 <div className="card-dark p-6 flex flex-col md:flex-row items-center gap-6 relative overflow-hidden">
