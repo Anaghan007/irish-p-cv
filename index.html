@@ -13,7 +13,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
     
-    <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoiQW5hZ2hhbiBTbWl0IENWIiwic2hvcnRfbmFtZSI6IkFuYWdoYW4iLCJzdGFydF91cmwiOiIuIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzBmMGYxMCIsInRoZW1lX2NvbG9yIjoiIzBmMGYxMCIsImljb25zIjpbeyJzcmMiOiJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vVGFyaWt1bC1Jc2xhbS1BbmlrL0FuaW1hdGVkLUZsdWVudC1FbW9qaXMvbWFzdGVyL0Vtb2ppcy9PYmplY3RzL0JyaWVmY2FzZS5wbmciLCJzaXplcyI6IjUxMng1MTIiLCJ0eXBlIjoiaW1hZ2UvcG5nIn1dLCJwdXJwb3NlIjoiYW55IG1hc2thYmxlIn0=">
+    <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoiQW5hZ2hhbiBTbWl0IENWIiwic2hvcnRfbmFtZSI6IkFuYWdoYW4iLCJzdGFydF91cmwiOiIuIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzBmMGYxMCIsInRoZW1lX2NvbG9yIjoiIzBmMGYxMCIsImljb25zIjpbeyJzcmMiOiJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vVGFyaWt1bC1Jc2xhbS1BbmlrL0FuaW1hdGVkLUZsdWVudC1FbW9qaXMvbWFzdGVyL0Vtb2ppcy9PYmplY3RzL0JyaWVmY2FzZS5wbmciLCJzaXplcyI6IjUxMng1MTIiLCJ0eXBlIjoiaW1hZ2UvcG5nIiwicHVycG9zZSI6ImFueSBtYXNrYWJsZSJ9XX0=">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -45,7 +45,6 @@
                 size: A4 portrait;
             }
             
-            /* Force Dark Background on EVERYTHING */
             html, body, #root {
                 width: 100% !important;
                 height: 100% !important;
@@ -57,7 +56,6 @@
                 overflow: hidden !important;
             }
 
-            /* Disable the Web Centering Wrapper */
             .web-wrapper {
                 display: block !important;
                 width: 100% !important;
@@ -65,7 +63,6 @@
                 background-color: #0f0f10 !important;
             }
 
-            /* Force the content container to fill the page */
             .content-container {
                 max-width: none !important;
                 width: 100% !important;
@@ -75,7 +72,6 @@
 
             .print-hidden { display: none !important; }
             
-            /* Grid Layout Enforcement */
             .md\:grid-cols-3 {
                 display: grid !important;
                 grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
@@ -85,11 +81,9 @@
             }
             .gap-4 { gap: 1rem !important; }
             
-            /* Print Order Enforcement (Main Content Left, Sidebar Right) */
-            .print\:order-1 { order: 1 !important; } /* Main Content */
-            .print\:order-2 { order: 2 !important; } /* Sidebar */
+            .print\:order-1 { order: 1 !important; }
+            .print\:order-2 { order: 2 !important; }
 
-            /* Text Sizing Adjustment for Print readability */
             .p-6 { padding: 1.25rem !important; }
             .my-print-gap { margin-top: 1.5rem !important; margin-bottom: 1.5rem !important; } 
         }
@@ -99,12 +93,42 @@
 
     <div id="root"></div>
 
+    <script>
+        // Service Worker for PWA (Required for Browser Install Prompt)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                const swCode = `
+                    self.addEventListener('install', (e) => self.skipWaiting());
+                    self.addEventListener('fetch', (e) => e.respondWith(fetch(e.request)));
+                `;
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(blob);
+                navigator.serviceWorker.register(swUrl).catch(err => console.log("SW failed", err));
+            });
+        }
+    </script>
+
     <script type="text/babel">
+        const { useState, useEffect } = React;
 
         const Resume = () => {
-            const handlePrint = () => {
-                window.print();
+            const [deferredPrompt, setDeferredPrompt] = useState(null);
+
+            useEffect(() => {
+                window.addEventListener('beforeinstallprompt', (e) => {
+                    e.preventDefault();
+                    setDeferredPrompt(e);
+                });
+            }, []);
+
+            const handleInstallClick = async () => {
+                if (!deferredPrompt) return;
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') setDeferredPrompt(null);
             };
+
+            const handlePrint = () => { window.print(); };
 
             const powerSkills = [
                 '⚡ Fast Learner', 
@@ -125,25 +149,33 @@
             return (
                 <div className="web-wrapper min-h-screen w-full flex justify-center bg-[#0f0f10]">
                     
-                    {/* PRINT BUTTON */}
-                    <button 
-                        onClick={handlePrint} 
-                        className="print-hidden fixed bottom-8 right-8 z-50 bg-indigo-600 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center hover:bg-indigo-500 transition-all"
-                        title="Save as PDF"
-                    >
-                        <i className="fas fa-print text-xl"></i>
-                    </button>
+                    {/* BUTTONS CONTAINER */}
+                    <div className="print-hidden fixed bottom-8 right-8 z-50 flex flex-col gap-4">
+                        {deferredPrompt && (
+                            <button 
+                                onClick={handleInstallClick} 
+                                className="bg-emerald-600 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center hover:bg-emerald-500 transition-all animate-bounce"
+                                title="Install App"
+                            >
+                                <i className="fas fa-download text-xl"></i>
+                            </button>
+                        )}
+                        <button 
+                            onClick={handlePrint} 
+                            className="bg-indigo-600 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center hover:bg-indigo-500 transition-all"
+                            title="Save as PDF"
+                        >
+                            <i className="fas fa-print text-xl"></i>
+                        </button>
+                    </div>
 
-                    {/* Content Container */}
                     <div className="content-container w-full max-w-[210mm] min-h-[297mm] p-4 md:p-6 flex flex-col safe-area-inset-bottom">
                         
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 flex-1">
                             
                             {/* === SIDEBAR (Vibe/Skills) === */}
-                            {/* Mobile: Order 2 (Last) | Desktop: Order 2 (Right) | Print: Order 2 (Right) */}
                             <div className="flex flex-col gap-4 h-full order-2 print:order-2">
                                 
-                                {/* VIBE CHECK */}
                                 <div className="card-dark p-5 flex-grow-0">
                                     <SectionTitle 
                                         icon={<i className="fas fa-rocket text-orange-500"></i>}
@@ -165,10 +197,7 @@
                                     </div>
                                 </div>
 
-                                {/* SKILLS & AVAILABILITY */}
                                 <div className="card-dark p-5 flex-1 flex flex-col">
-                                    
-                                    {/* SKILLS */}
                                     <div>
                                         <SectionTitle 
                                             icon={<i className="fas fa-bolt text-yellow-500"></i>}
@@ -184,10 +213,8 @@
                                         </div>
                                     </div>
 
-                                    {/* SPACER / DIVIDER */}
                                     <div className="w-full h-px bg-zinc-800 my-6 my-print-gap"></div>
 
-                                    {/* AVAILABILITY */}
                                     <div>
                                         <SectionTitle 
                                             icon={<span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>}
@@ -195,25 +222,17 @@
                                             colorClass="text-green-400"
                                         />
                                         <div className="flex flex-col gap-2">
-                                            <span className="w-full px-3 py-2 bg-green-500/10 text-green-400 text-xs rounded-full font-bold border border-green-500/20 text-center">
-                                                Weekdays
-                                            </span>
-                                            <span className="w-full px-3 py-2 bg-green-500/10 text-green-400 text-xs rounded-full font-bold border border-green-500/20 text-center">
-                                                Weekends
-                                            </span>
-                                            <span className="w-full px-3 py-2 bg-green-500/10 text-green-400 text-xs rounded-full font-bold border border-green-500/20 text-center">
-                                                Evenings
-                                            </span>
+                                            <span className="w-full px-3 py-2 bg-green-500/10 text-green-400 text-xs rounded-full font-bold border border-green-500/20 text-center">Weekdays</span>
+                                            <span className="w-full px-3 py-2 bg-green-500/10 text-green-400 text-xs rounded-full font-bold border border-green-500/20 text-center">Weekends</span>
+                                            <span className="w-full px-3 py-2 bg-green-500/10 text-green-400 text-xs rounded-full font-bold border border-green-500/20 text-center">Evenings</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             {/* === MAIN CONTENT (Header/Experience) === */}
-                            {/* Mobile: Order 1 (First) | Desktop: Order 1 (Left) | Print: Order 1 (Left) */}
                             <div className="md:col-span-2 flex flex-col gap-4 h-full order-1 print:order-1">
 
-                                {/* HEADER */}
                                 <div className="card-dark p-6 flex flex-col md:flex-row items-center gap-6 relative overflow-hidden">
                                     <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-indigo-900/20 to-transparent pointer-events-none"></div>
 
@@ -227,29 +246,21 @@
                                     </div>
 
                                     <div className="flex flex-col justify-center text-center md:text-left z-10">
-                                        
-                                        {/* === NAME FONT: POPPINS BLACK (900) === */}
                                         <h1 className="text-4xl text-white mb-4 tracking-tight" style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 900 }}>Anaghan Smit</h1>
                                         
-                                        {/* VISA (Green Text + Green Icon) */}
                                         <div className="flex flex-wrap justify-center md:justify-start gap-3">
                                             <span className="px-3 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full text-xs font-bold flex items-center gap-2">
                                                 <i className="fas fa-passport"></i> Stamp 2 Visa (20hrs / 40hrs)
                                             </span>
-                                            
-                                            {/* LOCATION (Orange Icon + Grey Text) */}
                                             <span className="px-3 py-1.5 bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-full text-xs font-semibold flex items-center gap-2">
                                                 <i className="fas fa-map-marker-alt text-orange-500"></i> Dublin, Ireland
                                             </span>
                                         </div>
 
-                                        {/* CONTACTS (Orange Icon + Grey Text) */}
                                         <div className="flex flex-wrap justify-center md:justify-start gap-3 mt-3">
-                                            
                                             <span className="px-3 py-1.5 bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-full text-xs font-semibold flex items-center gap-2">
                                                 <i className="fas fa-envelope text-orange-500"></i> anaghan161@gmail.com
                                             </span>
-                                            
                                             <span className="px-3 py-1.5 bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-full text-xs font-semibold flex items-center gap-2">
                                                 <i className="fas fa-phone text-orange-500"></i> +353 89 123 4567
                                             </span>
@@ -257,7 +268,6 @@
                                     </div>
                                 </div>
                                 
-                                {/* EXPERIENCE */}
                                 <div className="card-dark p-5 flex-1">
                                     <SectionTitle 
                                         icon={<i className="fas fa-briefcase text-orange-500"></i>}
@@ -277,7 +287,6 @@
                                             <span className="inline-block px-2 py-0.5 bg-yellow-500/20 text-yellow-300 rounded text-[10px] font-bold mb-2">Previous</span>
                                             <div className="text-zinc-400 text-xs font-bold uppercase mb-2">DMart Retail • India</div>
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
-                                                {/* rounded-[30px] used here to preserve text layout in grid */}
                                                 <div className="bg-zinc-800/40 p-3 rounded-[30px] border border-zinc-700/50">
                                                     <strong className="text-white text-xs block mb-1">📋 Inventory Logistics</strong>
                                                     <p className="text-zinc-400 text-xs">Managed stock reports & refilled empty shelves instantly.</p>
@@ -303,7 +312,6 @@
                                     </div>
                                 </div>
 
-                                {/* EDUCATION */}
                                 <div className="card-dark p-5">
                                     <SectionTitle 
                                         icon={<i className="fas fa-graduation-cap text-indigo-400"></i>}
@@ -312,8 +320,7 @@
                                     />
 
                                     <div className="grid grid-cols-1 gap-3">
-                                        {/* UPDATED: rounded-full for Education Boxes */}
-                                        <div className="bg-zinc-800/30 p-3 rounded-full border border-zinc-800 flex justify-between items-center">
+                                        <div className="bg-zinc-800/30 p-3 rounded-full border border-zinc-800 flex justify-between items-center px-4">
                                             <div className="pl-2">
                                                 <h4 className="text-white font-bold text-sm">MSc (Current)</h4>
                                                 <p className="text-zinc-500 text-xs">Dublin Business School</p>
@@ -321,7 +328,7 @@
                                             <span className="px-3 py-1 bg-zinc-900 text-indigo-400 rounded-full border border-zinc-700 text-xs font-mono">2026 - Present</span>
                                         </div>
 
-                                        <div className="bg-zinc-800/30 p-3 rounded-full border border-zinc-800 flex justify-between items-center">
+                                        <div className="bg-zinc-800/30 p-3 rounded-full border border-zinc-800 flex justify-between items-center px-4">
                                             <div className="pl-2">
                                                 <h4 className="text-white font-bold text-sm">Bachelor's Degree</h4>
                                                 <p className="text-zinc-500 text-xs">VNSGU University</p>
@@ -330,7 +337,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
