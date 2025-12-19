@@ -33,8 +33,8 @@
         }
         
         .card-dark {
-            background-color: #18181b; /* Zinc-900 */
-            border: 1px solid #27272a; /* Zinc-800 */
+            background-color: #18181b; 
+            border: 1px solid #27272a; 
             border-radius: 40px; 
         }
 
@@ -81,8 +81,8 @@
             }
             .gap-4 { gap: 1rem !important; }
             
-            .print\:order-1 { order: 1 !important; }
-            .print\:order-2 { order: 2 !important; }
+            .print\:order-1 { order: 1 !important; } 
+            .print\:order-2 { order: 2 !important; } 
 
             .p-6 { padding: 1.25rem !important; }
             .my-print-gap { margin-top: 1.5rem !important; margin-bottom: 1.5rem !important; } 
@@ -94,7 +94,7 @@
     <div id="root"></div>
 
     <script>
-        // Service Worker for PWA (Required for Browser Install Prompt)
+        /* Service Worker: This is the 'Background Engine' that triggers browser suggestions */
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 const swCode = `
@@ -109,26 +109,11 @@
     </script>
 
     <script type="text/babel">
-        const { useState, useEffect } = React;
 
         const Resume = () => {
-            const [deferredPrompt, setDeferredPrompt] = useState(null);
-
-            useEffect(() => {
-                window.addEventListener('beforeinstallprompt', (e) => {
-                    e.preventDefault();
-                    setDeferredPrompt(e);
-                });
-            }, []);
-
-            const handleInstallClick = async () => {
-                if (!deferredPrompt) return;
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') setDeferredPrompt(null);
+            const handlePrint = () => {
+                window.print();
             };
-
-            const handlePrint = () => { window.print(); };
 
             const powerSkills = [
                 '⚡ Fast Learner', 
@@ -149,31 +134,21 @@
             return (
                 <div className="web-wrapper min-h-screen w-full flex justify-center bg-[#0f0f10]">
                     
-                    {/* BUTTONS CONTAINER */}
-                    <div className="print-hidden fixed bottom-8 right-8 z-50 flex flex-col gap-4">
-                        {deferredPrompt && (
-                            <button 
-                                onClick={handleInstallClick} 
-                                className="bg-emerald-600 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center hover:bg-emerald-500 transition-all animate-bounce"
-                                title="Install App"
-                            >
-                                <i className="fas fa-download text-xl"></i>
-                            </button>
-                        )}
-                        <button 
-                            onClick={handlePrint} 
-                            className="bg-indigo-600 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center hover:bg-indigo-500 transition-all"
-                            title="Save as PDF"
-                        >
-                            <i className="fas fa-print text-xl"></i>
-                        </button>
-                    </div>
+                    {/* PRINT BUTTON - Only the standard print button remains */}
+                    <button 
+                        onClick={handlePrint} 
+                        className="print-hidden fixed bottom-8 right-8 z-50 bg-indigo-600 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center hover:bg-indigo-500 transition-all"
+                        title="Save as PDF"
+                    >
+                        <i className="fas fa-print text-xl"></i>
+                    </button>
 
+                    {/* Content Container */}
                     <div className="content-container w-full max-w-[210mm] min-h-[297mm] p-4 md:p-6 flex flex-col safe-area-inset-bottom">
                         
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 flex-1">
                             
-                            {/* === SIDEBAR (Vibe/Skills) === */}
+                            {/* SIDEBAR */}
                             <div className="flex flex-col gap-4 h-full order-2 print:order-2">
                                 
                                 <div className="card-dark p-5 flex-grow-0">
@@ -222,15 +197,21 @@
                                             colorClass="text-green-400"
                                         />
                                         <div className="flex flex-col gap-2">
-                                            <span className="w-full px-3 py-2 bg-green-500/10 text-green-400 text-xs rounded-full font-bold border border-green-500/20 text-center">Weekdays</span>
-                                            <span className="w-full px-3 py-2 bg-green-500/10 text-green-400 text-xs rounded-full font-bold border border-green-500/20 text-center">Weekends</span>
-                                            <span className="w-full px-3 py-2 bg-green-500/10 text-green-400 text-xs rounded-full font-bold border border-green-500/20 text-center">Evenings</span>
+                                            <span className="w-full px-3 py-2 bg-green-500/10 text-green-400 text-xs rounded-full font-bold border border-green-500/20 text-center">
+                                                Weekdays
+                                            </span>
+                                            <span className="w-full px-3 py-2 bg-green-500/10 text-green-400 text-xs rounded-full font-bold border border-green-500/20 text-center">
+                                                Weekends
+                                            </span>
+                                            <span className="w-full px-3 py-2 bg-green-500/10 text-green-400 text-xs rounded-full font-bold border border-green-500/20 text-center">
+                                                Evenings
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* === MAIN CONTENT (Header/Experience) === */}
+                            {/* MAIN CONTENT */}
                             <div className="md:col-span-2 flex flex-col gap-4 h-full order-1 print:order-1">
 
                                 <div className="card-dark p-6 flex flex-col md:flex-row items-center gap-6 relative overflow-hidden">
@@ -252,6 +233,7 @@
                                             <span className="px-3 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full text-xs font-bold flex items-center gap-2">
                                                 <i className="fas fa-passport"></i> Stamp 2 Visa (20hrs / 40hrs)
                                             </span>
+                                            
                                             <span className="px-3 py-1.5 bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-full text-xs font-semibold flex items-center gap-2">
                                                 <i className="fas fa-map-marker-alt text-orange-500"></i> Dublin, Ireland
                                             </span>
@@ -278,7 +260,6 @@
                                     <div className="space-y-6 relative">
                                         <div className="absolute left-[7px] top-2 bottom-2 w-0.5 bg-zinc-800"></div>
 
-                                        {/* DMART */}
                                         <div className="relative pl-6">
                                             <div className="absolute left-0 top-1.5 w-3.5 h-3.5 bg-zinc-900 border-2 border-yellow-500 rounded-full z-10"></div>
                                             <div className="flex justify-between items-start mb-1">
@@ -298,7 +279,6 @@
                                             </div>
                                         </div>
 
-                                        {/* LA PINOZ */}
                                         <div className="relative pl-6">
                                             <div className="absolute left-0 top-1.5 w-3.5 h-3.5 bg-zinc-900 border-2 border-orange-500 rounded-full z-10"></div>
                                             <h4 className="text-white font-bold text-lg mb-1">Delivery Specialist</h4>
