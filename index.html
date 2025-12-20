@@ -103,8 +103,17 @@
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 const swCode = `
-                    self.addEventListener('install', (e) => self.skipWaiting());
-                    self.addEventListener('fetch', (e) => e.respondWith(fetch(e.request)));
+                    self.addEventListener('install', (e) => {
+                        self.skipWaiting();
+                    });
+
+                    self.addEventListener('activate', (e) => {
+                        return self.clients.claim();
+                    });
+
+                    self.addEventListener('fetch', (e) => {
+                        e.respondWith(fetch(e.request));
+                    });
                 `;
                 const blob = new Blob([swCode], { type: 'application/javascript' });
                 const swUrl = URL.createObjectURL(blob);
@@ -114,6 +123,13 @@
     </script>
 
     <script type="text/babel">
+
+        const SectionTitle = ({ icon, text, colorClass = "text-zinc-300" }) => (
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-full mb-4">
+                {icon}
+                <span className={`text-xs font-bold uppercase tracking-wider ${colorClass}`}>{text}</span>
+            </div>
+        );
 
         const Resume = () => {
             const handlePrint = () => {
@@ -128,13 +144,6 @@
                 '📦 Stock Control', 
                 '💶 Cash Handling'
             ];
-
-            const SectionTitle = ({ icon, text, colorClass = "text-zinc-300" }) => (
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-full mb-4">
-                    {icon}
-                    <span className={`text-xs font-bold uppercase tracking-wider ${colorClass}`}>{text}</span>
-                </div>
-            );
 
             return (
                 <div className="web-wrapper min-h-screen w-full flex justify-center bg-[#0f0f10]">
@@ -163,7 +172,7 @@
                                         text="The Vibe"
                                         colorClass="text-orange-500"
                                     />
-                                    <p className="text-zinc-400 text-xs leading-relaxed mb-4">
+                                    <p className="text-zinc-400 text-sm leading-relaxed mb-4">
                                         I'm a high-energy Master's student who optimizes every task. Whether it's managing stock at DMart or delivering pizzas on time, I bring reliability and hustle. Looking for a team where I can work hard and grow.
                                     </p>
                                     <div className="grid grid-cols-2 gap-2">
@@ -286,12 +295,12 @@
                                             <div className="text-zinc-400 text-xs font-bold uppercase mb-2">DMart Retail • India</div>
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
                                                 <div className="bg-zinc-800/40 p-3 rounded-[30px] border border-zinc-700/50">
-                                                    <strong className="text-white text-xs block mb-1">📋 Inventory Logistics</strong>
-                                                    <p className="text-zinc-400 text-xs">Managed stock reports & refilled empty shelves instantly.</p>
+                                                    <strong className="text-white text-sm block mb-1">📋 Inventory Logistics</strong>
+                                                    <p className="text-zinc-400 text-sm">Managed stock reports & refilled empty shelves instantly.</p>
                                                 </div>
                                                 <div className="bg-zinc-800/40 p-3 rounded-[30px] border border-zinc-700/50">
-                                                    <strong className="text-white text-xs block mb-1">⚡ Fast Packing</strong>
-                                                    <p className="text-zinc-400 text-xs">Helped 100+ customers daily with rapid bagging.</p>
+                                                    <strong className="text-white text-sm block mb-1">⚡ Fast Packing</strong>
+                                                    <p className="text-zinc-400 text-sm">Helped 100+ customers daily with rapid bagging.</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -302,7 +311,7 @@
                                             <h4 className="text-white font-bold text-lg mb-1">Delivery Specialist</h4>
                                             <span className="inline-block px-2 py-0.5 bg-orange-500/20 text-orange-300 rounded text-[10px] font-bold mb-2">Previous</span>
                                             <div className="text-zinc-400 text-xs font-bold uppercase mb-2">La Pino'z Pizza • India</div>
-                                            <ul className="text-zinc-400 text-sm leading-relaxed list-disc ml-4 space-y-1">
+                                            <ul className="text-zinc-400 text-base leading-relaxed list-disc ml-4 space-y-2">
                                                 <li>Ensured on-time delivery in high traffic zones.</li>
                                                 <li>Handled cash & COD transactions accurately with zero errors.</li>
                                             </ul>
@@ -321,7 +330,7 @@
                                     <div className="grid grid-cols-1 gap-3">
                                         <div className="bg-zinc-800/30 p-3 rounded-full border border-zinc-800 flex justify-between items-center">
                                             <div className="pl-2">
-                                                <h4 className="text-white font-bold text-sm">MSc (Current)</h4>
+                                                <h4 className="text-white font-bold text-sm">MSc Digital Marketing (Current)</h4>
                                                 <p className="text-zinc-500 text-xs">Dublin Business School</p>
                                             </div>
                                             <span className="px-3 py-1 bg-zinc-900 text-indigo-400 rounded-full border border-zinc-700 text-xs font-mono">2026 - Present</span>
