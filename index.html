@@ -24,25 +24,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Poppins:wght@900&display=swap" rel="stylesheet">
 
     <style>
-        /* Base Application Styles */
+        /* Base Styles */
         body { 
             font-family: 'Outfit', sans-serif; 
             background-color: #0f0f10; 
             color: #e4e4e7;
             overscroll-behavior-y: none; 
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
         
         .card-dark {
             background-color: #18181b; /* Zinc-900 */
             border: 1px solid #27272a; /* Zinc-800 */
             border-radius: 40px; 
-            transition: all 0.3s ease;
-        }
-
-        .safe-area-inset-bottom {
-            padding-bottom: env(safe-area-inset-bottom);
         }
 
         /* === ULTIMATE PRINT FIX === */
@@ -52,6 +45,7 @@
                 size: A4 portrait;
             }
             
+            /* Force Dark Background on EVERYTHING */
             html, body, #root {
                 width: 100% !important;
                 height: 100% !important;
@@ -63,6 +57,7 @@
                 overflow: hidden !important;
             }
 
+            /* Disable the Web Centering Wrapper */
             .web-wrapper {
                 display: block !important;
                 width: 100% !important;
@@ -70,31 +65,33 @@
                 background-color: #0f0f10 !important;
             }
 
+            /* Force the content container to fill the page */
             .content-container {
                 max-width: none !important;
                 width: 100% !important;
-                padding: 30px !important;
+                padding: 25px !important;
                 box-sizing: border-box !important;
             }
 
             .print-hidden { display: none !important; }
             
+            /* Grid Layout Enforcement */
             .md\:grid-cols-3 {
                 display: grid !important;
                 grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
             }
-            
             .md\:col-span-2 {
                 grid-column: span 2 / span 2 !important;
             }
-            
             .gap-4 { gap: 1rem !important; }
             
-            .print\:order-1 { order: 1 !important; } 
-            .print\:order-2 { order: 2 !important; }
+            /* Print Order Enforcement (Main Content Left, Sidebar Right) */
+            .print\:order-1 { order: 1 !important; } /* Main Content */
+            .print\:order-2 { order: 2 !important; } /* Sidebar */
 
-            .p-6 { padding: 1.5rem !important; }
-            .my-print-gap { margin-top: 2rem !important; margin-bottom: 2rem !important; } 
+            /* Text Sizing Adjustment for Print readability */
+            .p-6 { padding: 1.25rem !important; }
+            .my-print-gap { margin-top: 1.5rem !important; margin-bottom: 1.5rem !important; } 
         }
     </style>
 </head>
@@ -103,40 +100,30 @@
     <div id="root"></div>
 
     <script>
-        /* Service Worker Registration for PWA and Offline Support */
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 const swCode = `
-                    const CACHE_NAME = 'cv-cache-v1';
-                    
-                    self.addEventListener('install', (event) => {
+                    self.addEventListener('install', (e) => {
                         self.skipWaiting();
                     });
 
-                    self.addEventListener('activate', (event) => {
-                        event.waitUntil(self.clients.claim());
+                    self.addEventListener('activate', (e) => {
+                        return self.clients.claim();
                     });
 
-                    self.addEventListener('fetch', (event) => {
-                        event.respondWith(
-                            fetch(event.request).catch(() => {
-                                return new Response('Offline content not available');
-                            })
-                        );
+                    self.addEventListener('fetch', (e) => {
+                        e.respondWith(fetch(e.request));
                     });
                 `;
                 const blob = new Blob([swCode], { type: 'application/javascript' });
                 const swUrl = URL.createObjectURL(blob);
-                navigator.serviceWorker.register(swUrl)
-                    .then(reg => console.log('Service Worker registered'))
-                    .catch(err => console.log('SW registration failed', err));
+                navigator.serviceWorker.register(swUrl).catch(err => console.log('SW registration failed', err));
             });
         }
     </script>
 
     <script type="text/babel">
 
-        /* Reusable Section Header Component */
         const SectionTitle = ({ icon, text, colorClass = "text-zinc-300" }) => (
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-full mb-4">
                 {icon}
@@ -161,31 +148,31 @@
             return (
                 <div className="web-wrapper min-h-screen w-full flex justify-center bg-[#0f0f10]">
                     
-                    {/* Action Buttons */}
+                    {/* PRINT BUTTON */}
                     <button 
                         onClick={handlePrint} 
-                        className="print-hidden fixed bottom-8 right-8 z-50 bg-indigo-600 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center hover:bg-indigo-500 hover:scale-110 active:scale-95 transition-all duration-300"
+                        className="print-hidden fixed bottom-8 right-8 z-50 bg-indigo-600 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center hover:bg-indigo-500 transition-all"
                         title="Save as PDF"
                     >
                         <i className="fas fa-print text-xl"></i>
                     </button>
 
-                    {/* Main Document Layout */}
+                    {/* Content Container */}
                     <div className="content-container w-full max-w-[210mm] min-h-[297mm] p-4 md:p-6 flex flex-col safe-area-inset-bottom">
                         
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 flex-1">
                             
-                            {/* === SIDEBAR COLUMN === */}
+                            {/* === SIDEBAR (Vibe/Skills) === */}
                             <div className="flex flex-col gap-4 h-full order-2 print:order-2">
                                 
-                                {/* Personal Pitch Section */}
+                                {/* VIBE CHECK */}
                                 <div className="card-dark p-5 flex-grow-0">
                                     <SectionTitle 
                                         icon={<i className="fas fa-rocket text-orange-500"></i>}
                                         text="The Vibe"
                                         colorClass="text-orange-500"
                                     />
-                                    <p className="text-zinc-400 text-base leading-relaxed mb-4">
+                                    <p className="text-zinc-400 text-sm leading-relaxed mb-4">
                                         I'm a high-energy Master's student who optimizes every task. Whether it's managing stock at DMart or delivering pizzas on time, I bring reliability and hustle. Looking for a team where I can work hard and grow.
                                     </p>
                                     <div className="grid grid-cols-2 gap-2">
@@ -200,9 +187,11 @@
                                     </div>
                                 </div>
 
-                                {/* Skills and Availability Card */}
+                                {/* SKILLS & AVAILABILITY */}
                                 <div className="card-dark p-5 flex-1 flex flex-col">
-                                    <div className="mb-6">
+                                    
+                                    {/* SKILLS */}
+                                    <div>
                                         <SectionTitle 
                                             icon={<i className="fas fa-bolt text-yellow-500"></i>}
                                             text="Top Skills"
@@ -217,8 +206,10 @@
                                         </div>
                                     </div>
 
-                                    <div className="w-full h-px bg-zinc-800 mb-6 my-print-gap"></div>
+                                    {/* SPACER / DIVIDER */}
+                                    <div className="w-full h-px bg-zinc-800 my-6 my-print-gap"></div>
 
+                                    {/* AVAILABILITY */}
                                     <div>
                                         <SectionTitle 
                                             icon={<span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>}
@@ -226,82 +217,101 @@
                                             colorClass="text-green-400"
                                         />
                                         <div className="flex flex-col gap-2">
-                                            <div className="w-full px-4 py-2 bg-green-500/10 text-green-400 text-xs rounded-full font-bold border border-green-500/20 text-center uppercase tracking-tighter">Weekdays</div>
-                                            <div className="w-full px-4 py-2 bg-green-500/10 text-green-400 text-xs rounded-full font-bold border border-green-500/20 text-center uppercase tracking-tighter">Weekends</div>
-                                            <div className="w-full px-4 py-2 bg-green-500/10 text-green-400 text-xs rounded-full font-bold border border-green-500/20 text-center uppercase tracking-tighter">Evenings</div>
+                                            <span className="w-full px-3 py-2 bg-green-500/10 text-green-400 text-xs rounded-full font-bold border border-green-500/20 text-center">
+                                                Weekdays
+                                            </span>
+                                            <span className="w-full px-3 py-2 bg-green-500/10 text-green-400 text-xs rounded-full font-bold border border-green-500/20 text-center">
+                                                Weekends
+                                            </span>
+                                            <span className="w-full px-3 py-2 bg-green-500/10 text-green-400 text-xs rounded-full font-bold border border-green-500/20 text-center">
+                                                Evenings
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* === MAIN CONTENT COLUMN === */}
+                            {/* === MAIN CONTENT (Header/Experience) === */}
                             <div className="md:col-span-2 flex flex-col gap-4 h-full order-1 print:order-1">
 
-                                {/* Profile Header Card */}
+                                {/* HEADER */}
                                 <div className="card-dark p-6 flex flex-col md:flex-row items-center gap-6 relative overflow-hidden">
                                     <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-indigo-900/20 to-transparent pointer-events-none"></div>
+
                                     <div className="relative flex-shrink-0">
                                          <div className="absolute top-0 left-0 w-full h-full bg-indigo-500/30 blur-xl rounded-full -z-10"></div>
-                                        <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People/Man%20Technologist.png" alt="Anaghan Smit" className="w-28 h-28 drop-shadow-2xl relative z-10" />
+                                        <img 
+                                            src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People/Man%20Technologist.png" 
+                                            alt="Avatar" 
+                                            className="w-28 h-28 drop-shadow-2xl relative z-10"
+                                        />
                                     </div>
+
                                     <div className="flex flex-col justify-center text-center md:text-left z-10">
+                                        
                                         <h1 className="text-4xl text-white mb-4 tracking-tight" style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 900 }}>Anaghan Smit</h1>
+                                        
                                         <div className="flex flex-wrap justify-center md:justify-start gap-3">
                                             <span className="px-3 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full text-xs font-bold flex items-center gap-2">
                                                 <i className="fas fa-passport"></i> Stamp 2 Visa (20hrs / 40hrs)
                                             </span>
+                                            
                                             <span className="px-3 py-1.5 bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-full text-xs font-semibold flex items-center gap-2">
                                                 <i className="fas fa-map-marker-alt text-orange-500"></i> Dublin, Ireland
                                             </span>
                                         </div>
+
                                         <div className="flex flex-wrap justify-center md:justify-start gap-3 mt-3">
-                                            <a href="mailto:anaghan161@gmail.com" className="px-3 py-1.5 bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-full text-xs font-semibold flex items-center gap-2 hover:bg-zinc-700 transition-colors">
+                                            
+                                            <span className="px-3 py-1.5 bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-full text-xs font-semibold flex items-center gap-2">
                                                 <i className="fas fa-envelope text-orange-500"></i> anaghan161@gmail.com
-                                            </a>
-                                            <a href="tel:+353891234567" className="px-3 py-1.5 bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-full text-xs font-semibold flex items-center gap-2 hover:bg-zinc-700 transition-colors">
+                                            </span>
+                                            
+                                            <span className="px-3 py-1.5 bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-full text-xs font-semibold flex items-center gap-2">
                                                 <i className="fas fa-phone text-orange-500"></i> +353 89 123 4567
-                                            </a>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
                                 
-                                {/* Professional Experience Section */}
+                                {/* EXPERIENCE */}
                                 <div className="card-dark p-5 flex-1">
                                     <SectionTitle 
                                         icon={<i className="fas fa-briefcase text-orange-500"></i>}
                                         text="Work Experience"
                                         colorClass="text-orange-500"
                                     />
-                                    <div className="space-y-8 relative pt-2">
-                                        <div className="absolute left-[7px] top-4 bottom-4 w-0.5 bg-zinc-800"></div>
 
-                                        {/* DMart Experience Entry */}
-                                        <div className="relative pl-8">
-                                            <div className="absolute left-0 top-1.5 w-4 h-4 bg-zinc-900 border-2 border-yellow-500 rounded-full z-10"></div>
-                                            <h4 className="text-white font-bold text-xl mb-1">Retail Associate</h4>
-                                            <span className="inline-block px-2 py-0.5 bg-yellow-500/20 text-yellow-300 rounded text-[10px] font-bold mb-2 uppercase tracking-wide">Previous Experience</span>
-                                            <div className="text-zinc-500 text-xs font-bold uppercase mb-4">DMart Retail • India</div>
-                                            
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                <div className="bg-zinc-800/40 p-4 rounded-[30px] border border-zinc-700/50">
-                                                    <strong className="text-white text-base block mb-2 tracking-tight">📋 Inventory Logistics</strong>
-                                                    <p className="text-zinc-400 text-base leading-snug">Managed stock reports & refilled empty shelves instantly.</p>
+                                    <div className="space-y-6 relative">
+                                        <div className="absolute left-[7px] top-2 bottom-2 w-0.5 bg-zinc-800"></div>
+
+                                        {/* DMART */}
+                                        <div className="relative pl-6">
+                                            <div className="absolute left-0 top-1.5 w-3.5 h-3.5 bg-zinc-900 border-2 border-yellow-500 rounded-full z-10"></div>
+                                            <div className="flex justify-between items-start mb-1">
+                                                <h4 className="text-white font-bold text-lg">Retail Associate</h4>
+                                            </div>
+                                            <span className="inline-block px-2 py-0.5 bg-yellow-500/20 text-yellow-300 rounded text-[10px] font-bold mb-2">Previous</span>
+                                            <div className="text-zinc-400 text-xs font-bold uppercase mb-2">DMart Retail • India</div>
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+                                                <div className="bg-zinc-800/40 p-3 rounded-[30px] border border-zinc-700/50">
+                                                    <strong className="text-white text-sm block mb-1">📋 Inventory Logistics</strong>
+                                                    <p className="text-zinc-400 text-sm">Managed stock reports & refilled empty shelves instantly.</p>
                                                 </div>
-                                                <div className="bg-zinc-800/40 p-4 rounded-[30px] border border-zinc-700/50">
-                                                    <strong className="text-white text-base block mb-2 tracking-tight">⚡ Fast Packing</strong>
-                                                    <p className="text-zinc-400 text-base leading-snug">Helped 100+ customers daily with rapid bagging.</p>
+                                                <div className="bg-zinc-800/40 p-3 rounded-[30px] border border-zinc-700/50">
+                                                    <strong className="text-white text-sm block mb-1">⚡ Fast Packing</strong>
+                                                    <p className="text-zinc-400 text-sm">Helped 100+ customers daily with rapid bagging.</p>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        {/* La Pino'z Experience Entry */}
-                                        <div className="relative pl-8">
-                                            <div className="absolute left-0 top-1.5 w-4 h-4 bg-zinc-900 border-2 border-orange-500 rounded-full z-10"></div>
-                                            <h4 className="text-white font-bold text-xl mb-1">Delivery Specialist</h4>
-                                            <span className="inline-block px-2 py-0.5 bg-orange-500/20 text-orange-300 rounded text-[10px] font-bold mb-2 uppercase tracking-wide">Previous Experience</span>
-                                            <div className="text-zinc-500 text-xs font-bold uppercase mb-4">La Pino'z Pizza • India</div>
-                                            
-                                            <ul className="text-zinc-400 text-lg leading-relaxed list-disc ml-5 space-y-3">
+                                        {/* LA PINOZ */}
+                                        <div className="relative pl-6">
+                                            <div className="absolute left-0 top-1.5 w-3.5 h-3.5 bg-zinc-900 border-2 border-orange-500 rounded-full z-10"></div>
+                                            <h4 className="text-white font-bold text-lg mb-1">Delivery Specialist</h4>
+                                            <span className="inline-block px-2 py-0.5 bg-orange-500/20 text-orange-300 rounded text-[10px] font-bold mb-2">Previous</span>
+                                            <div className="text-zinc-400 text-xs font-bold uppercase mb-2">La Pino'z Pizza • India</div>
+                                            <ul className="text-zinc-400 text-base leading-relaxed list-disc ml-4 space-y-2">
                                                 <li>Ensured on-time delivery in high traffic zones.</li>
                                                 <li>Handled cash & COD transactions accurately with zero errors.</li>
                                             </ul>
@@ -309,30 +319,29 @@
                                     </div>
                                 </div>
 
-                                {/* Academic Background Section */}
+                                {/* EDUCATION */}
                                 <div className="card-dark p-5">
                                     <SectionTitle 
                                         icon={<i className="fas fa-graduation-cap text-indigo-400"></i>}
                                         text="Education"
                                         colorClass="text-indigo-400"
                                     />
-                                    <div className="grid grid-cols-1 gap-4">
-                                        {/* Masters Degree */}
-                                        <div className="bg-zinc-800/30 p-4 rounded-[30px] border border-zinc-800/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                                            <div>
-                                                <h4 className="text-white font-bold text-base">MSc Digital Marketing (Current)</h4>
-                                                <p className="text-zinc-500 text-sm">Dublin Business School</p>
+
+                                    <div className="grid grid-cols-1 gap-3">
+                                        <div className="bg-zinc-800/30 p-3 rounded-full border border-zinc-800 flex justify-between items-center">
+                                            <div className="pl-2">
+                                                <h4 className="text-white font-bold text-sm">MSc Digital Marketing (Current)</h4>
+                                                <p className="text-zinc-500 text-xs">Dublin Business School</p>
                                             </div>
-                                            <span className="px-4 py-1.5 bg-zinc-900 text-indigo-400 rounded-full border border-zinc-700 text-xs font-mono font-bold">2026 - Present</span>
+                                            <span className="px-3 py-1 bg-zinc-900 text-indigo-400 rounded-full border border-zinc-700 text-xs font-mono">2026 - Present</span>
                                         </div>
-                                        
-                                        {/* Bachelors Degree */}
-                                        <div className="bg-zinc-800/30 p-4 rounded-[30px] border border-zinc-800/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                                            <div>
-                                                <h4 className="text-white font-bold text-base">Bachelor's Degree</h4>
-                                                <p className="text-zinc-500 text-sm">VNSGU University</p>
+
+                                        <div className="bg-zinc-800/30 p-3 rounded-full border border-zinc-800 flex justify-between items-center">
+                                            <div className="pl-2">
+                                                <h4 className="text-white font-bold text-sm">Bachelor's Degree</h4>
+                                                <p className="text-zinc-500 text-xs">VNSGU University</p>
                                             </div>
-                                            <span className="px-4 py-1.5 bg-zinc-900 text-zinc-400 rounded-full border border-zinc-700 text-xs font-mono font-bold">Completed</span>
+                                            <span className="px-3 py-1 bg-zinc-900 text-zinc-400 rounded-full border border-zinc-700 text-xs font-mono">Completed</span>
                                         </div>
                                     </div>
                                 </div>
@@ -344,9 +353,7 @@
             );
         };
 
-        /* Mount Application to DOM */
-        const container = document.getElementById('root');
-        const root = ReactDOM.createRoot(container);
+        const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<Resume />);
     </script>
 </body>
